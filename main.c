@@ -9,8 +9,8 @@
  */
 int main(int ac, char **av)
 {
-	inf_a info[] = { INFO_INIT };
-	int fd = 2;  //standard error
+	info_t info[] = { INFO_INIT };
+	int fd = 2;
 
 	asm ("mov %1, %0\n\t"
 		"add $3, %0"
