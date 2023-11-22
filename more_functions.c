@@ -26,12 +26,12 @@ int is_delim(char c, char *delim)
 }
 
 /**
- *_alpha - checks for alphabetic character
+ *_isalpha - checks for alphabetic character
  *@c: The character to input
  *Return: 1 if c is alphabetic, 0 otherwise
  */
 
-int _alpha(int c)
+int _isalpha(int c)
 {
 	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
 		return (1);
@@ -47,14 +47,11 @@ int _alpha(int c)
 
 int _atoi(char *s)
 {
-	int i, flag = 0, output;
-	int  sign = 1;
+	int i, sign = 1, flag = 0, output;
+	unsigned int result = 0;
 
 	for (i = 0;  s[i] != '\0' && flag != 2; i++)
-	{ 
-		
-		unsigned int result = 0;
-
+	{
 		if (s[i] == '-')
 			sign *= -1;
 
