@@ -6,10 +6,10 @@
  *          constant function prototype.
  * Return: Always 0
  */
-char **get_environ(inf_a *info)
+char **get_environ(info_t *info)
 {
 	if (!info->environ || info->env_changed)
-	{   
+	{
 		info->environ = list_to_strings(info->env);
 		info->env_changed = 0;
 	}
@@ -24,19 +24,19 @@ char **get_environ(inf_a *info)
  *  Return: 1 on delete, 0 otherwise
  * @var: the string env var property
  */
-int _unsetenv(inf_a *info, char *var)
+int _unsetenv(info_t *info, char *var)
 {
 	list_t *node = info->env;
 	size_t i = 0;
-	char *c;
+	char *p;
 
 	if (!node || !var)
 		return (0);
 
 	while (node)
 	{
-		c = starts_with(node->str, var);
-		if (c && *c == '=')
+		p = starts_with(node->str, var);
+		if (p && *p == '=')
 		{
 			info->env_changed = delete_node_at_index(&(info->env), i);
 			i = 0;
@@ -58,21 +58,21 @@ int _unsetenv(inf_a *info, char *var)
  * @value: the string env var value
  *  Return: Always 0
  */
-int _setenv(inf_a *info, char *var, char *value)
+int _setenv(info_t *info, char *var, char *value)
 {
-	char *buff = NULL;
+	char *buf = NULL;
 	list_t *node;
 	char *p;
 
 	if (!var || !value)
 		return (0);
 
-	buff = malloc(_strlen(var) + _strlen(value) + 2);
-	if (!buff)
+	buf = malloc(_strlen(var) + _strlen(value) + 2);
+	if (!buf)
 		return (1);
-	_strcpy(buff, var);
-	_strcat(buff, "=");
-	_strcat(buff, value);
+	_strcpy(buf, var);
+	_strcat(buf, "=");
+	_strcat(buf, value);
 	node = info->env;
 	while (node)
 	{
@@ -80,14 +80,14 @@ int _setenv(inf_a *info, char *var, char *value)
 		if (p && *p == '=')
 		{
 			free(node->str);
-			node->str = buff;
+			node->str = buf;
 			info->env_changed = 1;
 			return (0);
 		}
 		node = node->next;
 	}
-	add_node_end(&(info->env), buff, 0);
-	free(buff);
+	add_node_end(&(info->env), buf, 0);
+	free(buf);
 	info->env_changed = 1;
 	return (0);
 }
