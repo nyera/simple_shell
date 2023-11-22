@@ -1,87 +1,105 @@
 #include "shell.h"
 
-/**
- * _strcpy - copies a string
- * @dest: the destination
- * @src: the source
- *
- * Return: pointer to destination
- */
-char *_strcpy(char *dest, char *src)
-{
-	int i = 0;
+char *_strchr(char *s, char c);
+int _strspn(char *s, char *accept);
+int _strcmp(char *s1, char *s2);
+int _strncmp(const char *s1, const char *s2, size_t n);
 
-	if (dest == src || src == 0)
-		return (dest);
-	while (src[i])
+/**
+ * _strchr - Locates a character in a string.
+ * @s: The string to be searched.
+ * @c: The character to be located.
+ *
+ * Return: If c is found - a pointer to the first occurence.
+ *         If c is not found - NULL.
+ */
+char *_strchr(char *s, char c)
+{
+	int index;
+
+	for (index = 0; s[index]; index++)
 	{
-		dest[i] = src[i];
-		i++;
+		if (s[index] == c)
+			return (s + index);
 	}
-	dest[i] = 0;
-	return (dest);
+
+	return (NULL);
 }
 
 /**
- * _strdup - duplicates a string
- * @str: the string to duplicate
+ * _strspn - Gets the length of a prefix substring.
+ * @s: The string to be searched.
+ * @accept: The prefix to be measured.
  *
- * Return: pointer to the duplicated string
+ * Return: The number of bytes in s which
+ *         consist only of bytes from accept.
  */
-char *_strdup(const char *str)
+int _strspn(char *s, char *accept)
 {
-	int length = 0;
-	char *ret;
+	int bytes = 0;
+	int index;
 
-	if (str == NULL)
-		return (NULL);
-	while (*str++)
-		length++;
-	ret = malloc(sizeof(char) * (length + 1));
-	if (!ret)
-		return (NULL);
-	for (length++; length--;)
-		ret[length] = *--str;
-	return (ret);
+	while (*s)
+	{
+		for (index = 0; accept[index]; index++)
+		{
+			if (*s == accept[index])
+			{
+				bytes++;
+				break;
+			}
+		}
+		s++;
+	}
+	return (bytes);
 }
 
 /**
- *_puts - prints an input string
- *@str: the string to be printed
+ * _strcmp - Compares two strings.
+ * @s1: The first string to be compared.
+ * @s2: The second string to be compared.
  *
- * Return: Nothing
+ * Return: Positive byte difference if s1 > s2
+ *         0 if s1 = s2
+ *         Negative byte difference if s1 < s2
  */
-void _puts(char *str)
+int _strcmp(char *s1, char *s2)
 {
-	int i = 0;
-
-	if (!str)
-		return;
-	while (str[i] != '\0')
+	while (*s1 && *s2 && *s1 == *s2)
 	{
-		_putchar(str[i]);
-		i++;
+		s1++;
+		s2++;
 	}
+
+	if (*s1 != *s2)
+		return (*s1 - *s2);
+
+	return (0);
 }
 
 /**
- * _putchar - writes the character c to stdout
- * @c: The character to print
+ * _strncmp - Compare two strings.
+ * @s1: Pointer to a string.
+ * @s2: Pointer to a string.
+ * @n: The first n bytes of the strings to compare.
  *
- * Return: On success 1.
- * On error, -1 is returned, and errno is set appropriately.
+ * Return: Less than 0 if s1 is shorter than s2.
+ *         0 if s1 and s2 match.
+ *         Greater than 0 if s1 is longer than s2.
  */
-int _putchar(char c)
+int _strncmp(const char *s1, const char *s2, size_t n)
 {
-	static int i;
-	static char buf[WRITE_BUF_SIZE];
+	size_t i;
 
-	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
+	for (i = 0; s1[i] && s2[i] && i < n; i++)
 	{
-		write(1, buf, i);
-		i = 0;
+		if (s1[i] > s2[i])
+			return (s1[i] - s2[i]);
+		else if (s1[i] < s2[i])
+			return (s1[i] - s2[i]);
 	}
-	if (c != BUF_FLUSH)
-		buf[i++] = c;
-	return (1);
+	if (i == n)
+		return (0);
+	else
+		return (-15);
 }
