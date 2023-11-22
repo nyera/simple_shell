@@ -18,16 +18,16 @@ char *_memset(char *s, char b, unsigned int n)
 
 /**
  * ffree - frees a string of strings
- * @s: string of strings
+ * @pp: string of strings
  */
-void ffree(char **s)
+void ffree(char **pp)
 {
-	char **a = s;
+	char **a = pp;
 
-	if (!s)
+	if (!pp)
 		return;
-	while (*s)
-		free(*s++);
+	while (*pp)
+		free(*pp++);
 	free(a);
 }
 
@@ -59,4 +59,5 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 		p[old_size] = ((char *)ptr)[old_size];
 	free(ptr);
 	return (p);
+}	return (p);
 }
