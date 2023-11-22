@@ -69,7 +69,7 @@ typedef struct liststr
  *@status: the return status of the last exec'd command
  *@cmd_buf: address of pointer to cmd_buf, on if chaining
  *@cmd_buf_type: CMD_type ||, &&, ;
- *@readfd: the file descriptor fd from which to read line input
+ *@readfd: the fd from which to read line input
  *@histcount: the history line number count
  */
 typedef struct passinfo
@@ -93,8 +93,7 @@ typedef struct passinfo
 	int cmd_buf_type; /* CMD_type ||, &&, ; */
 	int readfd;
 	int histcount;
-} inf_a;
-
+} info_t;
 
 #define INFO_INIT \
 {NULL, NULL, NULL, 0, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, \
@@ -108,20 +107,20 @@ typedef struct passinfo
 typedef struct builtin
 {
 	char *type;
-	int (*func)(inf_a *);
+	int (*func)(info_t *);
 } builtin_table;
 
 
 /* hsh.c */
-int hsh(inf_a *, char **);
-int find_builtin(inf_a *);
-void find_cmd(inf_a *);
-void fork_cmd(inf_a *);
+int hsh(info_t *, char **);
+int find_builtin(info_t *);
+void find_cmd(info_t *);
+void fork_cmd(info_t *);
 
 /* path.c */
-int is_cmd(inf_a *, char *);
+int is_cmd(info_t *, char *);
 char *dup_chars(char *, int, int);
-char *find_path(inf_a *, char *, char *);
+char *find_path(info_t *, char *, char *);
 
 /* loophsh.c */
 int loophsh(char **);
@@ -129,8 +128,8 @@ int loophsh(char **);
 /* err_string_functions.c */
 void _eputs(char *);
 int _eputchar(char);
-int _writefd(char c, int fd);
-int _writesfd(char *str, int fd);
+int _putfd(char c, int fd);
+int _putsfd(char *str, int fd);
 
 /* string_functions.c */
 int _strlen(char *);
@@ -162,55 +161,55 @@ void *_realloc(void *, unsigned int, unsigned int);
 int bfree(void **);
 
 /* more_functions.c */
-int interactive(inf_a *);
+int interactive(info_t *);
 int is_delim(char, char *);
-int _alpha(int);
+int _isalpha(int);
 int _atoi(char *);
 
 /* more_functions2.c */
 int _erratoi(char *);
-void print_error(inf_a *, char *);
+void print_error(info_t *, char *);
 int print_d(int, int);
 char *convert_number(long int, int, int);
-void remove_comment(char *);
+void remove_comments(char *);
 
 /* builtin_emulators.c */
-int _myexit(inf_a *);
-int _mycd(inf_a *);
-int _myhelp(inf_a *);
+int _myexit(info_t *);
+int _mycd(info_t *);
+int _myhelp(info_t *);
 
 /* builtin_emulators2.c */
-int _myhistory(inf_a *);
-int _myalias(inf_a *);
+int _myhistory(info_t *);
+int _myalias(info_t *);
 
 /* getline.c module */
-ssize_t get_input(inf_a *);
-int _getline(inf_a *, char **, size_t *);
+ssize_t get_input(info_t *);
+int _getline(info_t *, char **, size_t *);
 void sigintHandler(int);
 
 /* info.c module */
-void c_info(inf_a *);
-void set_info(inf_a *, char **);
-void f_info(inf_a *, int);
+void clear_info(info_t *);
+void set_info(info_t *, char **);
+void free_info(info_t *, int);
 
 /* env.c module */
-char *_getenv(inf_a *, const char *);
-int _myenv(inf_a *);
-int _mysetenv(inf_a *);
-int _myunsetenv(inf_a *);
-int populate_env_list(inf_a *);
+char *_getenv(info_t *, const char *);
+int _myenv(info_t *);
+int _mysetenv(info_t *);
+int _myunsetenv(info_t *);
+int populate_env_list(info_t *);
 
 /* env2.c module */
-char **get_environ(inf_a *);
-int _unsetenv(inf_a *, char *);
-int _setenv(inf_a *, char *, char *);
+char **get_environ(info_t *);
+int _unsetenv(info_t *, char *);
+int _setenv(info_t *, char *, char *);
 
 /* file_io_functions.c */
-char *get_history_file(inf_a *info);
-int write_history(inf_a *info);
-int read_history(inf_a *info);
-int build_history_list(inf_a *info, char *buf, int linecount);
-int renumber_history(inf_a *info);
+char *get_history_file(info_t *info);
+int write_history(info_t *info);
+int read_history(info_t *info);
+int build_history_list(info_t *info, char *buf, int linecount);
+int renumber_history(info_t *info);
 
 /* liststr.c module */
 list_t *add_node(list_t **, const char *, int);
@@ -227,10 +226,10 @@ list_t *node_starts_with(list_t *, char *, char);
 ssize_t get_node_index(list_t *, list_t *);
 
 /* chain.c */
-int is_chain(inf_a *, char *, size_t *);
-void check_chain(inf_a *, char *, size_t *, size_t, size_t);
-int replace_alias(inf_a *);
-int replace_vars(inf_a *);
+int is_chain(info_t *, char *, size_t *);
+void check_chain(info_t *, char *, size_t *, size_t, size_t);
+int replace_alias(info_t *);
+int replace_vars(info_t *);
 int replace_string(char **, char *);
 
 #endif
