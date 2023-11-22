@@ -7,14 +7,14 @@
  *
  * Return: 0 on success, 1 on error, or error code
  */
-int hsh(inf_a *info, char **av)
+int hsh(info_t *info, char **av)
 {
 	ssize_t r = 0;
 	int builtin_ret = 0;
 
 	while (r != -1 && builtin_ret != -2)
 	{
-		c_info(info);
+		clear_info(info);
 		if (interactive(info))
 			_puts("$ ");
 		_eputchar(BUF_FLUSH);
@@ -28,10 +28,10 @@ int hsh(inf_a *info, char **av)
 		}
 		else if (interactive(info))
 			_putchar('\n');
-		f_info(info, 0);
+		free_info(info, 0);
 	}
 	write_history(info);
-	f_info(info, 1);
+	free_info(info, 1);
 	if (!interactive(info) && info->status)
 		exit(info->status);
 	if (builtin_ret == -2)
@@ -52,7 +52,7 @@ int hsh(inf_a *info, char **av)
  *			1 if builtin found but not successful,
  *			-2 if builtin signals exit()
  */
-int find_builtin(inf_a *info)
+int find_builtin(info_t *info)
 {
 	int i, built_in_ret = -1;
 	builtin_table builtintbl[] = {
@@ -83,7 +83,7 @@ int find_builtin(inf_a *info)
  *
  * Return: void
  */
-void find_cmd(inf_a *info)
+void find_cmd(info_t *info)
 {
 	char *path = NULL;
 	int i, k;
@@ -125,7 +125,7 @@ void find_cmd(inf_a *info)
  *
  * Return: void
  */
-void fork_cmd(inf_a *info)
+void fork_cmd(info_t *info)
 {
 	pid_t child_pid;
 
@@ -140,7 +140,7 @@ void fork_cmd(inf_a *info)
 	{
 		if (execve(info->path, info->argv, get_environ(info)) == -1)
 		{
-			f_info(info, 1);
+			free_info(info, 1);
 			if (errno == EACCES)
 				exit(126);
 			exit(1);
